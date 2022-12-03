@@ -1,8 +1,14 @@
 import Reader
+from functools import reduce
+
+
+def priority(char):
+    p = ord(char) - 96
+    return p if p > 0 else p + 58
 
 
 def run():
-    return sum(list(map(lambda a: (ord(a) - 96) if (ord(a) - 96) > 0 else (ord(a) - 96) + 58, map(lambda a: a[0].intersection(a[1]).intersection(a[2]).pop(), map(lambda a: list(map(lambda b: set(list(b[1])), a)), zip(filter(lambda a: (a[0] % 3) == 0, enumerate([line for line in Reader.read("input")])), filter(lambda a: (a[0] % 3) == 1, enumerate([line for line in Reader.read("input")])), filter(lambda a: (a[0] % 3) == 2, enumerate([line for line in Reader.read("input")]))))))))
+    return sum(map(lambda a: priority(a.pop()), map(lambda a: reduce(lambda b, c: b.intersection(c), a), zip(*(iter(map(lambda a: set(list(a)), [*Reader.read("input")])),) * 3))))
 
 
 print(f'Answer: {run()}')

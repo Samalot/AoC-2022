@@ -1,4 +1,5 @@
 import Reader
+from functools import reduce
 
 
 def priority(char):
@@ -7,20 +8,11 @@ def priority(char):
 
 
 def run():
-    total = 0
-    group = [set([]), set([]), set([])]
-
-    for index, line in enumerate(Reader.read("input")):
-
-        group_index = index % 3
-        group[group_index] = set(list(line))
-
-        if group_index == 2:
-            badge = group[0].intersection(group[1]).intersection(group[2]).pop()
-            total += priority(badge)
-
-    return total
+    sets = map(lambda a: set(list(a)), [*Reader.read("input")])
+    groups = zip(*(iter(sets),) * 3)
+    intersections = map(lambda a: reduce(lambda b, c: b.intersection(c), a), groups)
+    priorities = map(lambda a: priority(a.pop()), intersections)
+    return sum(priorities)
 
 
 print(f'Answer: {run()}')
-
